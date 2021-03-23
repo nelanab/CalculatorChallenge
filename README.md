@@ -1,1 +1,1 @@
-# CalculatorChallenge
+# Calculator Coding Challenge

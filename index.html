@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Calculator</title>
+			<link rel="preconnect" href="https://fonts.gstatic.com">
+			<link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
+			<link rel="stylesheet" href="style.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+			
+			<script>
+			var name='';
+			
+			var recentCalculations = '';
+				
+			var calcString='';
+				
+			var doingCalculation = false;
+			
+			function disp(val){	
+				if(val == '='){
+					calc();
+				}
+				else{
+					if(calcString == '' && doingCalculation == false){
+						clearDisp();
+					}
+					
+					doingCalculation = true;
+					calcString += val;
+					CalculatorForm.displayResult.value += val;
+				}
+			}
+			
+			function calc(){
+				var res = eval(calcString);
+				
+				calcString += "="
+				calcString += res
+				
+				CalculatorForm.displayResult.value=res;
+				
+				localStorage.setItem("user"+(localStorage.length+1), calcString);		
+				$.ajax({
+					url: 'update.php',
+					method: 'POST',
+					data: {
+						action: 'save',
+						calcString: calcString
+					},
+					success: console.log("run")
+				});
+
+				calcString = '';
+				
+				doingCalculation = false;
+				
+			}
+
+
+			setInterval(function loadResults(){
+
+				$.ajax({
+					method: "GET",
+					url: 'select.php',
+					dataType: "html",
+					success: function(response){
+						$('#calculations').html(response);
+					}
+				});
+
+				console.log("load results ran");
+				
+			}, 1000);
+			
+			function clearDisp(){
+				CalculatorForm.displayResult.value='';
+				
+				calcString = '';
+				
+				doingCalculation = false;
+			}
+			
+
+
+		</script>
+	</head>
+	
+	<body>
+		<div class="calc-container" id="calculatorForm">
+			<form name="CalculatorForm" >		
+				<div class="display">
+					<input id="result" type="text" placeholder="0" name="displayResult" />
+				</div>
+
+				<div class="buttons">
+					<div class="row">
+						<input type="button" name="b7" value="7" onClick="disp(b7.value)">
+						<input type="button" name="b8" value="8" onClick="disp(b8.value)">
+						<input type="button" name="b9" value="9" onClick="disp(b9.value)">
+						<input type="button" name="add" class="operators" value="+" onClick="disp(add.value)">
+					</div>
+						
+					<div class="row">
+						<input type="button" name="b4" value="4" onClick="disp(b4.value)">
+						<input type="button" name="b5" value="5" onClick="disp(b5.value)">
+						<input type="button" name="b6" value="6" onClick="disp(b6.value)">
+						<input type="button" name="sub" class="operators" value="-" onClick="disp(sub.value)">
+					</div>
+						
+					<div class="row">
+						<input type="button" name="b1" value="1" onClick="disp(b1.value)">
+						<input type="button" name="b2" value="2" onClick="disp(b2.value)">
+						<input type="button" name="b3" value="3" onClick="disp(b3.value)">
+						<input type="button" name="mul" class="operators" value="*" onClick="disp(mul.value)">
+					</div>
+						
+					<div class="row">
+						<input type="button" name="b0" value="0" onClick="disp(b0.value)">
+						<input type="button" name="decimal" value="." onClick="disp(decimal.value)" class="operators">
+						<input type="button" name="div" value="/" onClick="disp(div.value)" class="operators">
+						<input type="button" name="equal" class="operators" value="=" onClick="disp(equal.value)" id="="> 
+					</div>
+
+					<div class="row">	  
+						<input type="button" class="wideBtn" name="clr" value="Clear" onClick="clearDisp()">	
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="calculations"></div>
+	</body>
+	
+</html>
