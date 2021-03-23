@@ -10,5 +10,5 @@
 
 ### 3. Create a table named results with values id, results, calculated. calculated should be get the datetime of when the row is inserted into the table.
 
-### Live site can be viewed at [anabnlsn.com/calculator](www.anabnlsn.com/calculator)
+### Live site can be viewed at [anabnlsn.com/calculator](https://www.anabnlsn.com/calculator)
 
